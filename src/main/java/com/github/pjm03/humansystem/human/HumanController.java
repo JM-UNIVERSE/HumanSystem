@@ -31,7 +31,7 @@ public class HumanController {
         return ApiResult.fail(HttpStatus.INTERNAL_SERVER_ERROR, "서버측에서 오류 발생. 관리자에게 문의 바랍니다.");
     }
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     public ApiResult<?> createHuman(
             @RequestParam String name,
             @RequestParam(required = false, defaultValue = "") String birthday,
