@@ -1,6 +1,7 @@
 package com.github.pjm03.humansystem.human;
 
 import com.github.pjm03.humansystem.api.ApiResult;
+import com.github.pjm03.humansystem.exception.HumanNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,18 +22,23 @@ import java.util.List;
 public class HumanController {
     private final HumanService humanService;
 
+    @ExceptionHandler(HumanNotFoundException.class)
+    public ApiResult<?> handleNotFoundHuman(HumanNotFoundException e) {
+        return ApiResult.fail(HttpStatus.NOT_FOUND, "해당하는 정보를 찾을 수 없습니다.");
+    }
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ApiResult<Object> handleMissingParam(MissingServletRequestParameterException e) {
+    public ApiResult<?> handleMissingParam(MissingServletRequestParameterException e) {
         return ApiResult.fail(HttpStatus.PRECONDITION_FAILED, e.getMessage());
     }
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
-    public ApiResult<Object> handleException(InvalidDataAccessApiUsageException e) {
+    public ApiResult<?> handleException(InvalidDataAccessApiUsageException e) {
         return ApiResult.fail(HttpStatus.PRECONDITION_FAILED, e.getCause().getMessage());
     }
 
     @ExceptionHandler(Throwable.class)
-    public ApiResult<Object> handleException(Throwable t) {
+    public ApiResult<?> handleException(Throwable t) {
         t.printStackTrace();
         return ApiResult.fail(HttpStatus.INTERNAL_SERVER_ERROR, "서버측에서 오류 발생. 관리자에게 문의 바랍니다.");
     }
@@ -76,7 +82,7 @@ public class HumanController {
     ) {
         List<Human> humanList = humanService.findHuman(name, birthday, birthdayTime, idNumber, sex);
         if (humanList.size() > 0) return ApiResult.success(humanList);
-        else return ApiResult.fail(HttpStatus.NOT_FOUND, "정보를 찾을 수 없습니다.");
+        else throw new HumanNotFoundException();
     }
 
     @Operation(
@@ -91,7 +97,20 @@ public class HumanController {
         if (human != null) {
             String serial = humanService.serializeToString(human.getName(), human.getBirthday(), human.getBirthdayTime(), human.getIdNumber(), human.getSex());
             return ApiResult.success(serial);
-        } else return ApiResult.fail(HttpStatus.NOT_FOUND, "정보를 찾을 수 없습니다.");
+        } else throw new HumanNotFoundException();
+    }
+
+    @Operation(
+            summary = "시리얼에 해당하는 사람의 정보 가져오기",
+            description = "시리얼 데이터(serial)를 이용하여 해당하는 사람의 정보를 받아옵니다."
+    )
+    @GetMapping("/deserialize/{serial}")
+    public ApiResult<Human> deserialize(
+            @PathVariable String serial
+    ) {
+        Human human = humanService.deserialize(serial);
+        if (human != null) return ApiResult.success(human);
+        else throw new HumanNotFoundException();
     }
 
     @Operation(
@@ -104,6 +123,6 @@ public class HumanController {
     ) {
         Human human = humanService.findHuman(idNumber);
         if (human != null) return ApiResult.success(human);
-        else return ApiResult.fail(HttpStatus.NOT_FOUND, "정보를 찾을 수 없습니다.");
+        else throw new HumanNotFoundException();
     }
 }
