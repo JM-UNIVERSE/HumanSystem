@@ -33,9 +33,6 @@ dependencies {
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.5'
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 
-	//Swagger
-	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-
 	//Lombok
 	compileOnly 'org.projectlombok:lombok'
 
