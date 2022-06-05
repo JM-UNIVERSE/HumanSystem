@@ -27,7 +27,7 @@ public class HumanService {
         return birthday.substring(2) + (hyphen ? "-" : "") + human.getIdNumber();
     }
 
-    public byte[] serialize(String name, String birthday, String birthdayTime, String idNumber, Sex sex) {
+    public byte[] serialize(String name, String birthday, String birthdayTime, String idNumber, Human.Sex sex) {
         ByteArrayOutputStream baos = null;
         ObjectOutputStream oos = null;
         try {
@@ -62,11 +62,11 @@ public class HumanService {
         }
     }
 
-    public String serializeToString(String name, String birthday, String birthdayTime, String idNumber, Sex sex) {
+    public String serializeToString(String name, String birthday, String birthdayTime, String idNumber, Human.Sex sex) {
         return Base64.encodeBase64String(serialize(name, birthday, birthdayTime, idNumber, sex));
     }
 
-    public Human createHuman(String name, String birthday, String birthdayTime, Sex sex) {
+    public Human createHuman(String name, String birthday, String birthdayTime, Human.Sex sex) {
         if (birthday.length() != 8 || !birthday.matches("[0-9]+")) {
             throw new IllegalArgumentException("'birthday' 필드는 8자의 정수(ex. 19700101)여야 합니다.");
         }
@@ -82,7 +82,7 @@ public class HumanService {
         return humanRepository.save(new Human(name, birthday, birthdayTime, idNumber, sex));
     }
 
-    public List<Human> findHuman(String name, String birthday, String birthdayTime, String idNumber, Sex sex) {
+    public List<Human> findHuman(String name, String birthday, String birthdayTime, String idNumber, Human.Sex sex) {
         return humanRepository.findHuman(name, birthday, birthdayTime, idNumber, sex);
     }
 

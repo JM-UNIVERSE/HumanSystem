@@ -8,6 +8,6 @@ public interface HumanRepository extends JpaRepository<Human, String>, HumanDslR
     Human save(Human human);
     List<Human> findByName(String name);
     List<Human> findByBirthday(long birthday);
-    List<Human> findBySex(Sex sex);
+    List<Human> findBySex(Human.Sex sex);
     Human findByIdNumber(String idNumber);
 }

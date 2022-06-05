@@ -18,7 +18,7 @@ public class HumanDslRepositoryImpl implements HumanDslRepository {
     }
 
     @Override
-    public List<Human> findHuman(String name, String birthday, String birthdayTime, String idNumber, Sex sex) {
+    public List<Human> findHuman(String name, String birthday, String birthdayTime, String idNumber, Human.Sex sex) {
         BooleanExpression whereExpression = null;
         if (name != null && !name.isEmpty()) {
             whereExpression = andOrCreate(null, human.name.eq(name));

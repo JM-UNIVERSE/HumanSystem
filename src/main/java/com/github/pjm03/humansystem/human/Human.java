@@ -1,6 +1,5 @@
 package com.github.pjm03.humansystem.human;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -36,4 +35,8 @@ public class Human {
     @Schema(description = "성별", allowableValues = {"MAN", "WOMAN", "OTHER"})
     @NonNull
     private Sex sex;
+
+    public enum Sex {
+        MAN, WOMAN, OTHER
+    }
 }

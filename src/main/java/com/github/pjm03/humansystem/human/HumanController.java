@@ -2,7 +2,6 @@ package com.github.pjm03.humansystem.human;
 
 import com.github.pjm03.humansystem.api.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -58,7 +57,7 @@ public class HumanController {
             @RequestParam String name,
             @RequestParam String birthday,
             @RequestParam String birthdayTime,
-            @RequestParam Sex sex
+            @RequestParam Human.Sex sex
     ) {
         return ApiResult.success(humanService.createHuman(name, birthday, birthdayTime, sex));
     }
@@ -73,7 +72,7 @@ public class HumanController {
             @RequestParam(required = false) String birthday,
             @RequestParam(required = false) String birthdayTime,
             @RequestParam(required = false) String idNumber,
-            @RequestParam(required = false) Sex sex
+            @RequestParam(required = false) Human.Sex sex
     ) {
         List<Human> humanList = humanService.findHuman(name, birthday, birthdayTime, idNumber, sex);
         if (humanList.size() > 0) return ApiResult.success(humanList);
