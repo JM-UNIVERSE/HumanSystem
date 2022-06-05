@@ -1,5 +1,7 @@
-#?? ???? ???? username, password ?? ???? root ??? ?? git ignore?? ?? ???.
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: 'ant_path_matcher'
   datasource:
     driver-class-name: 'org.mariadb.jdbc.Driver'
     url: 'jdbc:mariadb://localhost:3306/jm_universe'
