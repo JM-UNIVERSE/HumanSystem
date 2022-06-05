@@ -1,22 +1,11 @@
 package com.github.pjm03.humansystem.api;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-@RequiredArgsConstructor
-@Getter
-public class Response<T> {
-    private final HttpStatus status;
-    private final int code;
-    private final long timestamp;
-    private final String errMsg;
-    private final T data;
-
+public class Response {
     public static ResponseEntity<?> success(Object data) {
         return success(HttpStatus.OK, data);
     }
