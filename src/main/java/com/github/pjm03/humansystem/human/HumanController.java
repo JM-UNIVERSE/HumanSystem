@@ -81,6 +81,21 @@ public class HumanController {
     }
 
     @Operation(
+            summary = "해당하는 사람의 시리얼 확인",
+            description = "주민등록번호(idNumber)를 이용하여 해당하는 사람 1명의 시리얼을 받아옵니다."
+    )
+    @GetMapping("/{idNumber}/serial")
+    public ApiResult<String> getSerial(
+            @PathVariable String idNumber
+    ) {
+        Human human = humanService.findHuman(idNumber);
+        if (human != null) {
+            String serial = humanService.serializeToString(human.getName(), human.getBirthday(), human.getBirthdayTime(), human.getIdNumber(), human.getSex());
+            return ApiResult.success(serial);
+        } else return ApiResult.fail(HttpStatus.NOT_FOUND, "정보를 찾을 수 없습니다.");
+    }
+
+    @Operation(
             summary = "주민등록번호를 이용한 사람 정보 가져오기",
             description = "주민등록번호(idNumber)를 이용하여 해당하는 사람 1명의 정보를 가져옵니다."
     )

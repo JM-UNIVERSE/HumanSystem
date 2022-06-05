@@ -79,8 +79,7 @@ public class HumanService {
         int randomCode = new Random().nextInt(1000000);
 
         String idNumber = String.format("%d%06d", sexCode, randomCode);
-        byte[] serial = serialize(name, birthday, birthdayTime, idNumber, sex);
-        return humanRepository.save(new Human(name, birthday, birthdayTime, idNumber, sex, serial));
+        return humanRepository.save(new Human(name, birthday, birthdayTime, idNumber, sex));
     }
 
     public List<Human> findHuman(String name, String birthday, String birthdayTime, String idNumber, Sex sex) {
