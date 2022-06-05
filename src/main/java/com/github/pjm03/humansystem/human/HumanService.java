@@ -1,6 +1,5 @@
 package com.github.pjm03.humansystem.human;
 
-import com.github.pjm03.humansystem.exception.HumanNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -113,7 +112,8 @@ public class HumanService {
     }
 
     public Human deserialize(String serial) {
-        return deserialize(serial.getBytes(StandardCharsets.UTF_8));
+        byte[] bytes = Base64.decodeBase64(serial);
+        return deserialize(bytes);
     }
 
     public Human createHuman(String name, String birthday, String birthdayTime, Human.Sex sex) {

@@ -1,6 +1,5 @@
 package com.github.pjm03.humansystem.api;
 
-import com.github.pjm03.humansystem.human.Human;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
