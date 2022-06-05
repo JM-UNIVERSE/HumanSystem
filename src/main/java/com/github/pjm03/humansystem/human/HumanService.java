@@ -69,7 +69,7 @@ public class HumanService {
     }
 
     public String serializeToString(String name, String birthday, String birthdayTime, String idNumber, Human.Sex sex) {
-        return Base64.encodeBase64String(serialize(name, birthday, birthdayTime, idNumber, sex));
+        return Base64.encodeBase64URLSafeString(serialize(name, birthday, birthdayTime, idNumber, sex));
     }
 
     public Human deserialize(byte[] serial) {
@@ -115,7 +115,7 @@ public class HumanService {
     }
 
     public Human deserialize(String serial) {
-        byte[] bytes = Base64.decodeBase64(serial);
+        byte[] bytes = Base64.decodeBase64URLSafe(serial);
         return deserialize(bytes);
     }
 

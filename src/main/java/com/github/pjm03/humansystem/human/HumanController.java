@@ -1,13 +1,16 @@
 package com.github.pjm03.humansystem.human;
 
-import com.github.pjm03.humansystem.api.ApiResult;
+import com.github.pjm03.humansystem.api.Response;
 import com.github.pjm03.humansystem.exception.HumanNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,38 +20,38 @@ public class HumanController {
     private final HumanService humanService;
 
     @ExceptionHandler(HumanNotFoundException.class)
-    public ApiResult<?> handleNotFoundHuman(HumanNotFoundException e) {
-        return ApiResult.fail(HttpStatus.NOT_FOUND, "해당하는 정보를 찾을 수 없습니다.");
+    public ResponseEntity<?> handleNotFoundHuman(HumanNotFoundException e) {
+        return Response.fail(HttpStatus.NOT_FOUND, "해당하는 정보를 찾을 수 없습니다.");
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ApiResult<?> handleMissingParam(MissingServletRequestParameterException e) {
-        return ApiResult.fail(HttpStatus.PRECONDITION_FAILED, e.getMessage());
+    public ResponseEntity<?> handleMissingParam(MissingServletRequestParameterException e) {
+        return Response.fail(HttpStatus.PRECONDITION_FAILED, e.getMessage());
     }
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
-    public ApiResult<?> handleException(InvalidDataAccessApiUsageException e) {
-        return ApiResult.fail(HttpStatus.PRECONDITION_FAILED, e.getCause().getMessage());
+    public ResponseEntity<?> handleException(InvalidDataAccessApiUsageException e) {
+        return Response.fail(HttpStatus.PRECONDITION_FAILED, e.getCause().getMessage());
     }
 
     @ExceptionHandler(Throwable.class)
-    public ApiResult<?> handleException(Throwable t) {
+    public ResponseEntity<?> handleException(Throwable t) {
         t.printStackTrace();
-        return ApiResult.fail(HttpStatus.INTERNAL_SERVER_ERROR, "서버측에서 오류 발생. 관리자에게 문의 바랍니다.");
+        return Response.fail(HttpStatus.INTERNAL_SERVER_ERROR, "서버측에서 오류 발생. 관리자에게 문의 바랍니다.");
     }
 
     @PostMapping("/create")
-    public ApiResult<Human> createHuman(
+    public ResponseEntity<?> createHuman(
             @RequestParam String name,
             @RequestParam String birthday,
             @RequestParam String birthdayTime,
             @RequestParam Human.Sex sex
     ) {
-        return ApiResult.success(humanService.createHuman(name, birthday, birthdayTime, sex));
+        return Response.success(humanService.createHuman(name, birthday, birthdayTime, sex));
     }
 
     @GetMapping
-    public ApiResult<List<Human>> findHuman(
+    public ResponseEntity<?> findHuman(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String birthday,
             @RequestParam(required = false) String birthdayTime,
@@ -56,36 +59,36 @@ public class HumanController {
             @RequestParam(required = false) Human.Sex sex
     ) {
         List<Human> humanList = humanService.findHuman(name, birthday, birthdayTime, idNumber, sex);
-        if (humanList.size() > 0) return ApiResult.success(humanList);
+        if (humanList.size() > 0) return Response.success(humanList);
         else throw new HumanNotFoundException();
     }
 
     @GetMapping("/{idNumber}/serial")
-    public ApiResult<String> getSerial(
+    public ResponseEntity<?> getSerial(
             @PathVariable String idNumber
     ) {
         Human human = humanService.findHuman(idNumber);
         if (human != null) {
             String serial = humanService.serializeToString(human.getName(), human.getBirthday(), human.getBirthdayTime(), human.getIdNumber(), human.getSex());
-            return ApiResult.success(serial);
+            return Response.success(serial);
         } else throw new HumanNotFoundException();
     }
 
     @GetMapping("/deserialize/{serial}")
-    public ApiResult<Human> deserialize(
+    public ResponseEntity<?> deserialize(
             @PathVariable String serial
     ) {
         Human human = humanService.deserialize(serial);
-        if (human != null) return ApiResult.success(human);
+        if (human != null) return Response.success(human);
         else throw new HumanNotFoundException();
     }
 
     @GetMapping("/{idNumber}")
-    public ApiResult<Human> findHumanByIdNUmber(
+    public ResponseEntity<?> findHumanByIdNUmber(
             @PathVariable String idNumber
     ) {
         Human human = humanService.findHuman(idNumber);
-        if (human != null) return ApiResult.success(human);
+        if (human != null) return Response.success(human);
         else throw new HumanNotFoundException();
     }
 }
